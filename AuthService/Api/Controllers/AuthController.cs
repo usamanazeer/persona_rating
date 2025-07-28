@@ -24,15 +24,7 @@ public class AuthController : ControllerBase
             var command = new GoogleLoginCommand(request.IdToken);
             GoogleLoginResponse result = await _mediator.Send(command);
 
-        //    var result = new GoogleLoginResponse(
-        //        AccessToken: "ya29.a0AfH6SMDMOCKTOKEN1234567890",
-        //        RefreshToken: "1//0gMOCKREFRESHTOKEN1234567890",
-        //        UserId: "123456789012345678901",
-        //        Email: "john.doe@example.com",
-        //        Name: "John Doe",
-        //        Picture: "https://lh3.googleusercontent.com/a-/AOh14GgMockProfilePic",
-        //        IsProfileComplete: true
-        //);
+      
             return Ok(result);
         }
         catch (UnauthorizedAccessException ex)
