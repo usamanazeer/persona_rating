@@ -72,14 +72,14 @@ services:
 
   gateway:
     build:
-      context: ./gateway
+      context: ./Gateway
     depends_on:
       - authservice
       - profileservice
     ports:
       - "8080:80"
     volumes:
-      - ./gateway/ocelot.json:/app/ocelot.json
+      - ./Gateway/ocelot.json:/app/ocelot.json
 
 volumes:
   pgdata_auth:
