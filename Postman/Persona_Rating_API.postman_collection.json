@@ -1,0 +1,263 @@
+{
+	"info": {
+		"_postman_id": "persona-rating-api-collection",
+		"name": "Persona Rating API",
+		"description": "API collection for testing the Persona Rating application through the Gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Gateway Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5132/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5132",
+					"path": [
+						"health"
+					]
+				},
+				"description": "Check if the Gateway is running and healthy"
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Google Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"idToken\": \"your-google-id-token-here\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5132/api/auth/google-login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5132",
+					"path": [
+						"api",
+						"auth",
+						"google-login"
+					]
+				},
+				"description": "Authenticate user using Google ID token"
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Refresh Token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"refreshToken\": \"your-refresh-token-here\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5132/api/auth/refresh",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5132",
+					"path": [
+						"api",
+						"auth",
+						"refresh"
+					]
+				},
+				"description": "Refresh access token using refresh token"
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Get Current User",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5132/api/auth/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5132",
+					"path": [
+						"api",
+						"auth",
+						"me"
+					]
+				},
+				"description": "Get current user information using JWT token"
+			},
+			"response": []
+		},
+		{
+			"name": "Direct AuthService - Google Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"idToken\": \"your-google-id-token-here\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5175/api/auth/google-login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5175",
+					"path": [
+						"api",
+						"auth",
+						"google-login"
+					]
+				},
+				"description": "Direct call to AuthService (bypassing Gateway) for testing"
+			},
+			"response": []
+		},
+		{
+			"name": "Direct AuthService - Refresh Token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"refreshToken\": \"your-refresh-token-here\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5175/api/auth/refresh",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5175",
+					"path": [
+						"api",
+						"auth",
+						"refresh"
+					]
+				},
+				"description": "Direct call to AuthService (bypassing Gateway) for testing"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Pre-request script to set up any required variables",
+					"console.log('Making request to: ' + pm.request.url);"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Test script to validate responses",
+					"pm.test(\"Status code is 200\", function () {",
+					"    pm.response.to.have.status(200);",
+					"});",
+					"",
+					"pm.test(\"Response time is less than 2000ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+					"});",
+					"",
+					"// If it's an auth response, extract tokens",
+					"if (pm.response.json() && pm.response.json().accessToken) {",
+					"    pm.environment.set(\"access_token\", pm.response.json().accessToken);",
+					"    console.log(\"Access token saved to environment\");",
+					"}",
+					"",
+					"if (pm.response.json() && pm.response.json().refreshToken) {",
+					"    pm.environment.set(\"refresh_token\", pm.response.json().refreshToken);",
+					"    console.log(\"Refresh token saved to environment\");",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5132",
+			"type": "string"
+		},
+		{
+			"key": "auth_service_url",
+			"value": "http://localhost:5175",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+} 
