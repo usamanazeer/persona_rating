@@ -1,4 +1,4 @@
-using Ocelot.DependencyInjection;
+﻿using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,15 +29,19 @@ var app = builder.Build();
 // Configure CORS
 app.UseCors("AllowAll");
 
-// Map health endpoint BEFORE Ocelot
-app.MapGet("/health", () => new { 
-    status = "healthy", 
-    service = "Gateway", 
+// ? Map health BEFORE Ocelot
+app.MapGet("/health", () => new
+{
+    status = "healthy",
+    service = "Gateway",
     timestamp = DateTime.UtcNow,
     version = "1.0.0"
 });
 
-// Use Ocelot for all other routes
-await app.UseOcelot();
+// ? Now apply Ocelot middleware
+app.MapWhen(
+    ctx => !ctx.Request.Path.StartsWithSegments("/health"),
+    branchApp => branchApp.UseOcelot().Wait()
+);
 
 app.Run();
