@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "Common.Contracts.Protos";
+
+package user;
+
+message User {
+  string id = 1;
+  string email = 2;
+  string displayName = 3;
+  string role = 4;
+}
+
+message GetUserByIdRequest {
+  string id = 1;
+}
+
+message GetUserByIdResponse {
+  User user = 1;
+}
+
+service UserService {
+  rpc GetUserById(GetUserByIdRequest) returns (GetUserByIdResponse);
+} 

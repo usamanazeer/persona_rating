@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option csharp_namespace = "Common.Contracts.Protos";
+
+package profile;
+
+message Profile {
+  string id = 1;
+  string name = 2;
+  string category = 3;
+  string bio = 4;
+  string claimStatus = 5;
+}
+
+message GetProfileByIdRequest {
+  string id = 1;
+}
+
+message GetProfileByIdResponse {
+  Profile profile = 1;
+}
+
+service ProfileService {
+  rpc GetProfileById(GetProfileByIdRequest) returns (GetProfileByIdResponse);
+} 
