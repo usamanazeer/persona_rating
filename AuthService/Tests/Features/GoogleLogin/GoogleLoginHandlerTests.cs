@@ -35,6 +35,26 @@ public class GoogleLoginHandlerTests
         _mockBus.Setup(x => x.PubSub).Returns(mockPubSub.Object);
         
         _handler = new GoogleLoginHandler(_context, _mockGoogleAuthService.Object, _mockJwtService.Object, _mockBus.Object);
+        
+        // Seed roles for tests
+        SeedRolesForTests();
+    }
+    
+    private void SeedRolesForTests()
+    {
+        if (!_context.Roles.Any())
+        {
+            var roles = new List<Role>
+            {
+                new Role { Id = 1, Name = "user", Description = "Create profiles, write reviews, subscribe", CreatedAt = DateTime.UtcNow },
+                new Role { Id = 2, Name = "verifier", Description = "Validate profile submissions", CreatedAt = DateTime.UtcNow },
+                new Role { Id = 3, Name = "admin", Description = "Moderate content, finalize verifications", CreatedAt = DateTime.UtcNow },
+                new Role { Id = 4, Name = "figure", Description = "Officially engage with their own claimed profile", CreatedAt = DateTime.UtcNow }
+            };
+            
+            _context.Roles.AddRange(roles);
+            _context.SaveChanges();
+        }
     }
     
     [Fact]
@@ -99,7 +119,8 @@ public class GoogleLoginHandlerTests
             GoogleId = "google123",
             Email = "test@example.com",
             Name = "Test User",
-            Picture = "picture.jpg"
+            Picture = "picture.jpg",
+            RoleId = 1 // Registered User role
         };
         
         await _context.Users.AddAsync(existingUser);
