@@ -10,8 +10,8 @@ public static class RoleIds
     public const int PublicFigure = 4;
 }
 public static class RoleNames {
-    public const string RegisteredUser = "Registered User";
-    public const string Verifier = "Verifier";
-    public const string AdminBackOffice = "Admin";
-    public const string PublicFigure = "PublicFigure";
+    public const string RegisteredUser = "user";
+    public const string Verifier = "verifier";
+    public const string AdminBackOffice = "admin";
+    public const string PublicFigure = "figure";
 }

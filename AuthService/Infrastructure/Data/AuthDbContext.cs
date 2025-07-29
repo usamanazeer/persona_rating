@@ -1,3 +1,4 @@
+using AuthService.Domain.Constants;
 using AuthService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,10 +27,10 @@ public class AuthDbContext : DbContext
             
             // Seed roles
             entity.HasData(
-                new Role { Id = 1, Name = "Registered User", Description = "Create profiles, write reviews, subscribe", CreatedAt = DateTime.UtcNow },
-                new Role { Id = 2, Name = "Verifier", Description = "Validate profile submissions", CreatedAt = DateTime.UtcNow },
-                new Role { Id = 3, Name = "Admin", Description = "Moderate content, finalize verifications", CreatedAt = DateTime.UtcNow },
-                new Role { Id = 4, Name = "Public Figure", Description = "Officially engage with their own claimed profile", CreatedAt = DateTime.UtcNow }
+                new Role { Id = RoleIds.RegisteredUser, Name = RoleNames.RegisteredUser, Description = "Create profiles, write reviews, subscribe", CreatedAt = DateTime.UtcNow },
+                new Role { Id = RoleIds.Verifier, Name = RoleNames.Verifier, Description = "Validate profile submissions", CreatedAt = DateTime.UtcNow },
+                new Role { Id = RoleIds.AdminBackOffice, Name = RoleNames.AdminBackOffice, Description = "Moderate content, finalize verifications", CreatedAt = DateTime.UtcNow },
+                new Role { Id = RoleIds.PublicFigure, Name = RoleNames.PublicFigure, Description = "Officially engage with their own claimed profile", CreatedAt = DateTime.UtcNow }
             );
         });
         
