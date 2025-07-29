@@ -62,7 +62,6 @@ public class GoogleLoginHandlerTests
         result.Email.Should().Be("test@example.com");
         result.Name.Should().Be("Test User");
         result.Picture.Should().Be("picture.jpg");
-        result.IsProfileComplete.Should().BeFalse();
         
         // Verify user was created in database
         var user = await _context.Users.FirstOrDefaultAsync(u => u.GoogleId == "google123");
@@ -100,8 +99,7 @@ public class GoogleLoginHandlerTests
             GoogleId = "google123",
             Email = "test@example.com",
             Name = "Test User",
-            Picture = "picture.jpg",
-            IsProfileComplete = true
+            Picture = "picture.jpg"
         };
         
         await _context.Users.AddAsync(existingUser);
@@ -123,7 +121,6 @@ public class GoogleLoginHandlerTests
         
         // Assert
         result.Should().NotBeNull();
-        result.IsProfileComplete.Should().BeTrue();
         
         // Verify no new user was created
         var userCount = await _context.Users.CountAsync();

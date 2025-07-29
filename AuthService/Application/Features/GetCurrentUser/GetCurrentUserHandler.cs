@@ -25,8 +25,7 @@ public class GetCurrentUserHandler : IRequestHandler<GetCurrentUserQuery, GetCur
             user.Id,
             user.Email,
             user.Name,
-            user.Picture,
-            user.IsProfileComplete
+            user.Picture
         );
     }
 } 

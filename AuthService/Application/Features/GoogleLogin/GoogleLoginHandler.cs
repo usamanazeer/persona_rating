@@ -53,7 +53,7 @@ public class GoogleLoginHandler : IRequestHandler<GoogleLoginCommand, GoogleLogi
                 Email = googleUserInfo.Email,
                 Name = googleUserInfo.Name,
                 Picture = googleUserInfo.Picture,
-                RoleId = RoleIds.RegisteredUser
+                RoleId = RoleConstants.Ids.RegisteredUser
             };
             
             _context.Users.Add(user);
@@ -79,7 +79,7 @@ public class GoogleLoginHandler : IRequestHandler<GoogleLoginCommand, GoogleLogi
         }
         
         // Generate tokens
-        var accessToken = _jwtService.GenerateAccessToken(user.Id, user.Email, user.Role?.Name ?? RoleNames.RegisteredUser);
+        var accessToken = _jwtService.GenerateAccessToken(user.Id, user.Email, user.Role?.Name ?? RoleConstants.Names.RegisteredUser);
         var refreshTokenValue = _jwtService.GenerateRefreshToken();
         
         // Save refresh token

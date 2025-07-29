@@ -1,4 +1,3 @@
-using AuthService.Domain.Constants;
 using AuthService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,14 +23,6 @@ public class AuthDbContext : DbContext
             entity.HasIndex(e => e.Name).IsUnique();
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Description).HasMaxLength(500);
-            
-            // Seed roles
-            entity.HasData(
-                new Role { Id = RoleIds.RegisteredUser, Name = RoleNames.RegisteredUser, Description = "Create profiles, write reviews, subscribe", CreatedAt = DateTime.UtcNow },
-                new Role { Id = RoleIds.Verifier, Name = RoleNames.Verifier, Description = "Validate profile submissions", CreatedAt = DateTime.UtcNow },
-                new Role { Id = RoleIds.AdminBackOffice, Name = RoleNames.AdminBackOffice, Description = "Moderate content, finalize verifications", CreatedAt = DateTime.UtcNow },
-                new Role { Id = RoleIds.PublicFigure, Name = RoleNames.PublicFigure, Description = "Officially engage with their own claimed profile", CreatedAt = DateTime.UtcNow }
-            );
         });
         
         modelBuilder.Entity<User>(entity =>

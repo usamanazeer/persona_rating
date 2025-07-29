@@ -32,8 +32,7 @@ public class GetCurrentUserHandlerTests
             GoogleId = "google123",
             Email = "test@example.com",
             Name = "Test User",
-            Picture = "picture.jpg",
-            IsProfileComplete = true
+            Picture = "picture.jpg"
         };
         
         await _context.Users.AddAsync(user);
@@ -50,7 +49,6 @@ public class GetCurrentUserHandlerTests
         result.Email.Should().Be("test@example.com");
         result.Name.Should().Be("Test User");
         result.Picture.Should().Be("picture.jpg");
-        result.IsProfileComplete.Should().BeTrue();
     }
     
     [Fact]
