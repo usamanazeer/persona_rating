@@ -1,5 +1,6 @@
 using AuthService.Domain.Entities;
 using AuthService.Domain.Events;
+using AuthService.Domain.Constants;
 using AuthService.Infrastructure.Data;
 using AuthService.Infrastructure.Services;
 using EasyNetQ;
@@ -33,21 +34,26 @@ public class GoogleLoginHandler : IRequestHandler<GoogleLoginCommand, GoogleLogi
         var googleUserInfo = await _googleAuthService.VerifyTokenAsync(request.IdToken);
         if (googleUserInfo == null)
             throw new UnauthorizedAccessException("Invalid Google token");
-        
+
+        // Check if email is verified
+        if (!googleUserInfo.EmailVerified)
+            throw new UnauthorizedAccessException("Email address is not verified. Please verify your email address with Google before signing in.");
+
         // Find or create user
         var user = await _context.Users
+            .Include(u => u.Role)
             .FirstOrDefaultAsync(u => u.GoogleId == googleUserInfo.Sub, cancellationToken);
         
         if (user == null)
         {
-            // Create new user
+            // Create new user with "Registered User" role
             user = new User
             {
                 GoogleId = googleUserInfo.Sub,
                 Email = googleUserInfo.Email,
                 Name = googleUserInfo.Name,
                 Picture = googleUserInfo.Picture,
-                IsProfileComplete = false
+                RoleId = RoleIds.RegisteredUser
             };
             
             _context.Users.Add(user);
@@ -73,7 +79,7 @@ public class GoogleLoginHandler : IRequestHandler<GoogleLoginCommand, GoogleLogi
         }
         
         // Generate tokens
-        var accessToken = _jwtService.GenerateAccessToken(user.Id, user.Email, "User");
+        var accessToken = _jwtService.GenerateAccessToken(user.Id, user.Email, user.Role?.Name ?? RoleNames.RegisteredUser);
         var refreshTokenValue = _jwtService.GenerateRefreshToken();
         
         // Save refresh token
@@ -93,8 +99,7 @@ public class GoogleLoginHandler : IRequestHandler<GoogleLoginCommand, GoogleLogi
             user.Id,
             user.Email,
             user.Name,
-            user.Picture,
-            user.IsProfileComplete
+            user.Picture
         );
     }
 } 

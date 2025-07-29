@@ -6,6 +6,5 @@ public record GoogleLoginResponse(
     string UserId,
     string Email,
     string Name,
-    string? Picture,
-    bool IsProfileComplete
+    string? Picture
 ); 

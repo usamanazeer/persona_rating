@@ -27,7 +27,7 @@
 			"response": []
 		},
 		{
-			"name": "Auth - Google Login",
+			"name": "Auth - Google Login (Verified Email)",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -38,7 +38,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"idToken\": \"your-google-id-token-here\"\n}",
+					"raw": "{\n  \"idToken\": \"verified-token\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -58,7 +58,79 @@
 						"google-login"
 					]
 				},
-				"description": "Authenticate user using Google ID token"
+				"description": "Authenticate user with verified email (should succeed)"
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Google Login (Unverified Email)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"idToken\": \"unverified-token\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5132/api/auth/google-login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5132",
+					"path": [
+						"api",
+						"auth",
+						"google-login"
+					]
+				},
+				"description": "Authenticate user with unverified email (should fail with 401)"
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Google Login (Invalid Token)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"idToken\": \"invalid-token\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5132/api/auth/google-login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5132",
+					"path": [
+						"api",
+						"auth",
+						"google-login"
+					]
+				},
+				"description": "Authenticate user with invalid token (should fail with 401)"
 			},
 			"response": []
 		},
@@ -127,7 +199,7 @@
 			"response": []
 		},
 		{
-			"name": "Direct AuthService - Google Login",
+			"name": "Direct AuthService - Google Login (Verified)",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -138,7 +210,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"idToken\": \"your-google-id-token-here\"\n}",
+					"raw": "{\n  \"idToken\": \"verified-token\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -158,7 +230,43 @@
 						"google-login"
 					]
 				},
-				"description": "Direct call to AuthService (bypassing Gateway) for testing"
+				"description": "Direct call to AuthService (bypassing Gateway) for testing verified email"
+			},
+			"response": []
+		},
+		{
+			"name": "Direct AuthService - Google Login (Unverified)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"idToken\": \"unverified-token\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5175/api/auth/google-login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5175",
+					"path": [
+						"api",
+						"auth",
+						"google-login"
+					]
+				},
+				"description": "Direct call to AuthService (bypassing Gateway) for testing unverified email"
 			},
 			"response": []
 		},
@@ -216,10 +324,6 @@
 				"type": "text/javascript",
 				"exec": [
 					"// Test script to validate responses",
-					"pm.test(\"Status code is 200\", function () {",
-					"    pm.response.to.have.status(200);",
-					"});",
-					"",
 					"pm.test(\"Response time is less than 2000ms\", function () {",
 					"    pm.expect(pm.response.responseTime).to.be.below(2000);",
 					"});",

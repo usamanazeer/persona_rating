@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AuthService.Domain.Entities;
 
@@ -19,12 +20,14 @@ public class User
     
     public string? Picture { get; set; }
     
-    public bool IsProfileComplete { get; set; } = false;
+    [Required]
+    public int RoleId { get; set; }
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
     public DateTime? UpdatedAt { get; set; }
     
     // Navigation properties
+    public virtual Role Role { get; set; } = null!;
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 } 
